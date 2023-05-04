@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.io.StringReader
+
 
 class GameFragmentViewModel : ViewModel() {
 
@@ -59,19 +59,19 @@ class GameFragmentViewModel : ViewModel() {
                 /*
                 *For Each wrong guess,update incorrect guesses and lives left
                  */
-                _inCorrectGuesses.value += "$guess"
-                _livesLeft.value = _livesLeft.value?.minus(1)
-
-                //set gameOver property value to true if the game is won or lost
-                if(isWon() || isLost()) _gameOver.value = true
+                _inCorrectGuesses.value += guess
+                _livesLeft.value = livesLeft.value?.minus(1)
             }
         }
+        //set gameOver property value to true if the game is won or lost
+        if (isWon() || isLost()) _gameOver.value = true
 
 
     }
 
     private fun isWon() = secretWord.equals(secretWordDisplay.value, true)
-    private fun isLost() = (livesLeft.value ?: 0) <= 0 // Game is lost when the user runs out of lives
+    private fun isLost() =
+        (livesLeft.value ?: 0) <= 0 // Game is lost when the user runs out of lives
 
     fun wonLostMessage(): String {
         var message = ""
@@ -83,13 +83,14 @@ class GameFragmentViewModel : ViewModel() {
 
     }
 
+    fun finishGame() {
+        _gameOver.value = true
+
+    }
+
     override fun onCleared() {
         super.onCleared()
         Log.i("GameFragmentViewModel", "ViewModel Cleared")
     }
 
-    fun finishGame(){
-        _gameOver.value = true
-
-    }
 }
